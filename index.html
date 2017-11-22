@@ -3,16 +3,26 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>MartinaScape</title>
+    <title>Игричка</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="css/main.css">
 
 </head>
 <body>
+<div>
+    <h1>Добре дошли в игричката. Моля изберете какво ниво желаете:
+    <button onclick="gameEngine.createLevel(levelWithTiles)">Цветни Квадрати</button>
+        <a href="#" id="barbiebutton" onclick="gameEngine.createLevel(levelWithBarbies)">
+            <span>Barbie</span>
+        </a>
+    </h1>
+</div>
 <div id="grid">
 
 </div>
-
+<div>
+    <h2>Играта е специално създадена за моите принцеси: <span style="color: deeppink">Деница, Камелия и Мартина</span></h2>
+</div>
 <script src="js/vendor/jquery-3.2.1.min.js"></script>
 <script src="js/vendor/jquery-ui.min.js"></script>
 <script src="js/vendor/jquery-swapsies.js"></script>

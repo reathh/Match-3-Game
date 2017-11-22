@@ -1,23 +1,23 @@
 class Grid {
     constructor(container, swapTileCallback) {
-        this._container = container;
-        this._swapTileCallback = swapTileCallback;
-        this._isfieldDrawn = false;
-        this._clustersToRemove = [];
+        this.container = container;
+        this.swapTileCallback = swapTileCallback;
+        this.isfieldDrawn = false;
+        this.clustersToRemove = [];
+        this.baseTileImagesPath = 'img/tiles/'
     }
 
     drawField(tiles) {
         var _self = this;
+        this.container.empty();
+        this.clustersToRemove = [];
 
         for (var row = 0; row < tiles.length; row++) {
             var rowDiv = $('<div></div>').attr('data-row', row);
             for (var col = 0; col < tiles[row].length; col++) {
                 var tile = tiles[row][col];
 
-                var tileDiv = $('<div></div>')
-                    .attr('data-type', tile.type)
-                    .css('background-color', rgb(tile.colors))
-                    .addClass('tile');
+                var tileDiv = createTile.call(this, tile);
 
                 var tileContainer = $('<div></div>')
                     .addClass('tileContainer')
@@ -30,21 +30,21 @@ class Grid {
                             onStopOfDraggingTile.call(this, _self);
                         },
                         stack: 'div',
-                        containment: this._container
+                        containment: this.container
                     });
 
                 tileContainer.append(tileDiv);
                 rowDiv.append(tileContainer);
             }
 
-            this._container.append(rowDiv);
+            this.container.append(rowDiv);
         }
 
-        this._isfieldDrawn = true;
+        this.isfieldDrawn = true;
     }
 
     swapTiles(row1, col1, row2, col2, callFromEngine) {
-        if (!this._isfieldDrawn) {
+        if (!this.isfieldDrawn) {
             return;
         }
 
@@ -61,7 +61,7 @@ class Grid {
                 manipulateDOMData(el1, el2, col1, col2);
 
                 if (!callFromEngine) {
-                    _self._swapTileCallback(row1, col1, row2, col2);
+                    _self.swapTileCallback(row1, col1, row2, col2);
                 }
             }
         });
@@ -69,7 +69,7 @@ class Grid {
 
     arrangeTile(row1, col1, row2, col2) {
         return new Promise((resolve, reject) => {
-            if (!this._isfieldDrawn) {
+            if (!this.isfieldDrawn) {
                 return;
             }
 
@@ -92,22 +92,22 @@ class Grid {
     }
 
     addClusterToBeRemoved(cluster) {
-        if (!this._isfieldDrawn) {
+        if (!this.isfieldDrawn) {
             return;
         }
 
-        this._clustersToRemove.push(cluster);
+        this.clustersToRemove.push(cluster);
     }
 
     removeClusters() {
         return new Promise((resolve, reject) => {
-            if (!this._isfieldDrawn || this._clustersToRemove.length === 0) {
+            if (!this.isfieldDrawn || this.clustersToRemove.length === 0) {
                 resolve();
                 return;
             }
 
             var _self = this;
-            var clustersWithJqueryElements = this._clustersToRemove.map(function (cluster) {
+            var clustersWithJqueryElements = this.clustersToRemove.map(function (cluster) {
                 return cluster.map(function (tileParameters) {
                     var tileContainer = findElementContainerInGrid.call(_self, tileParameters.row, tileParameters.column);
                     return tileContainer.find('div[class="tile"]');
@@ -123,7 +123,7 @@ class Grid {
             });
 
             Promise.all(animationPromises).then(function () {
-                _self._clustersToRemove = [];
+                _self.clustersToRemove = [];
                 resolve();
             });
         })
@@ -131,17 +131,15 @@ class Grid {
 
     addTile(row, col, tile) {
         return new Promise((resolve, reject) => {
-            if (!this._isfieldDrawn) {
+            if (!this.isfieldDrawn) {
                 return;
             }
 
             var container = findElementContainerInGrid.call(this, row, col);
             container.empty();
-            var newElement = $('<div></div>')
-                .addClass('tile')
-                .attr('data-type', tile.type)
-                .css('background-color', rgb(tile.colors))
-                .css('display', 'none')
+
+            var newElement = createTile.call(this, tile);
+            newElement.css('display', 'none')
                 .data('type', tile.type);
 
             container.append(newElement);
@@ -233,7 +231,7 @@ function onStopOfDraggingTile(classInstance) {
         case 'right':
             col2 = col1 + 1;
 
-            const numberofColumns = classInstance._container.find('div[data-row="' + row1 + '"]').children().length;
+            const numberofColumns = classInstance.container.find('div[data-row="' + row1 + '"]').children().length;
             if (col2 + 1 > numberofColumns) {
                 return;
             }
@@ -248,7 +246,7 @@ function onStopOfDraggingTile(classInstance) {
         case 'down':
             row2 = row1 + 1;
 
-            const numberOfRows = classInstance._container.children().length;
+            const numberOfRows = classInstance.container.children().length;
             if (row2 + 1 > numberOfRows) {
                 return;
             }
@@ -293,5 +291,20 @@ function swapElementsInDOM(elm1, elm2) {
 }
 
 function findElementContainerInGrid(row, col) {
-    return this._container.find('div[data-row="' + row + '"] div[data-col="' + col + '"]');
+    return this.container.find('div[data-row="' + row + '"] div[data-col="' + col + '"]');
+}
+
+function createTile(tileParameters) {
+    var tileDiv = $('<div></div>')
+        .attr('data-type', tileParameters.type)
+        .addClass('tile');
+
+    if (tileParameters.colors) {
+        tileDiv.append($('<div></div>').css('background-color', rgb(tileParameters.colors)));
+    }
+    else if (tileParameters.imageSource) {
+        tileDiv.append($('<img src="' + this.baseTileImagesPath + tileParameters.imageSource + '">'))
+    }
+
+    return tileDiv;
 }
