@@ -58,6 +58,18 @@ var levelWithBarbies = {
         {
             type: 'BarbieMd',
             imageSource: "tile_3.jpg"
+        },
+        {
+            type: "MyLittlePony",
+            imageSource: "tile_4.png"
+        },
+        {
+            type: "LipStick",
+            imageSource: "tile_5.jpg"
+        },
+        {
+            type: "MinnieMouse",
+            imageSource: "tile_6.gif"
         }
     ]
 };

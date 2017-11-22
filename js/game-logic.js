@@ -16,6 +16,8 @@ class Engine {
         this.level = level;
         var done = false;
         this.isFieldDrawn = false;
+        this.tiles = [];
+        this.grid.isfieldDrawn = false;
 
         for (var i = 0; i < level.columns; i++) {
             this.tiles[i] = [];
@@ -124,7 +126,7 @@ class Engine {
             }
 
             for (var i = shift; i > 0; i--) {
-                var randomTile = this._getRandomTile(levelWithTiles.tileTypes);
+                var randomTile = this._getRandomTile(this.level.tileTypes);
                 this.tiles[i - 1][col] = randomTile;
                 if (this.isFieldDrawn) {
                     this.grid.addTile(i - 1, col, randomTile);
