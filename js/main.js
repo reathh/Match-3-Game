@@ -5,8 +5,8 @@ var levelWithTiles = {
         {
             row: 0,
             col: 0,
-            type: 'speciale',
-            colors: [0, 0, 0]
+            type: 'red',
+            colors: [255, 128, 128]
         }
     ],
     tileTypes: [
@@ -42,8 +42,8 @@ var levelWithTiles = {
 };
 
 var levelWithBarbies = {
-    columns: 8,
-    rows: 8,
+    columns: 6,
+    rows: 6,
     hardCodedTiles: [
     ],
     tileTypes: [
