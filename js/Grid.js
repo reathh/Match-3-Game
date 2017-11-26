@@ -1,10 +1,23 @@
+const toleranceInPx = 3;
+const animationTImeForTileSwap = 250;
+const animationTimeForTileArrangement = 120;
+const animationTimeForTileRemoval = 300;
+const animationTimeForAddingTile = 500;
+
+var startingPosition,
+    startingOffset,
+    differenceX,
+    differenceY,
+    direction;
 class Grid {
-    constructor(container, swapTileCallback) {
+
+    constructor(container, engineInstance, swapTileCallback) {
         this.container = container;
+        this.engineInstance = engineInstance;
         this.swapTileCallback = swapTileCallback;
         this.isfieldDrawn = false;
         this.clustersToRemove = [];
-        this.baseTileImagesPath = 'img/tiles/'
+        this.baseTileImagesPath = 'img/tiles/';
     }
 
     drawField(tiles) {
@@ -17,17 +30,17 @@ class Grid {
             for (var col = 0; col < tiles[row].length; col++) {
                 var tile = tiles[row][col];
 
-                var tileDiv = createTile.call(this, tile);
+                var tileDiv = this._createTile(tile);
 
                 var tileContainer = $('<div></div>')
                     .addClass('tileContainer')
                     .attr('data-col', col)
                     .draggable({
                         //revert: 'invalid',
-                        start: onStartOfDraggingTile,
-                        drag: onDragOfTile,
-                        stop: function (event, ui) {
-                            onStopOfDraggingTile.call(this, _self);
+                        start: this._onStartOfDraggingTile,
+                        drag: this._onDragOfTile,
+                        stop: function () {
+                            _self._onStopOfDraggingTile.call(this, _self)
                         },
                         stack: 'div',
                         containment: this.container
@@ -50,18 +63,18 @@ class Grid {
 
         var _self = this;
 
-        var el1 = findElementContainerInGrid.call(this, row1, col1);
-        var el2 = findElementContainerInGrid.call(this, row2, col2);
+        var el1 = this._findElementContainerInGrid(row1, col1);
+        var el2 = this._findElementContainerInGrid(row2, col2);
 
         el1.swap({
             target: el2, // Mandatory. The ID of the element we want to swap with
             //opacity: "0.9", // Optional. If set will give the swapping elements a translucent effect while in motion
-            speed: 250, // Optional. The time taken in milliseconds for the animation to occur
+            speed: animationTImeForTileSwap, // Optional. The time taken in milliseconds for the animation to occur
             callback: function () { // Optional. Callback function once the swap is complete
-                manipulateDOMData(el1, el2, col1, col2);
+                _self._manipulateDOMData(el1, el2, col1, col2);
 
                 if (!callFromEngine) {
-                    _self.swapTileCallback(row1, col1, row2, col2);
+                    _self.swapTileCallback.call(_self.engineInstance, row1, col1, row2, col2);
                 }
             }
         });
@@ -75,15 +88,15 @@ class Grid {
 
             var _self = this;
 
-            var el1 = findElementContainerInGrid.call(this, row1, col1);
-            var el2 = findElementContainerInGrid.call(this, row2, col2);
+            var el1 = this._findElementContainerInGrid(row1, col1);
+            var el2 = this._findElementContainerInGrid(row2, col2);
 
             el1.swap({
                 target: el2, // Mandatory. The ID of the element we want to swap with
                 //opacity: "0.9", // Optional. If set will give the swapping elements a translucent effect while in motion
                 speed: animationTimeForTileArrangement, // Optional. The time taken in milliseconds for the animation to occur
                 callback: function () { // Optional. Callback function once the swap is complete
-                    manipulateDOMData(el1, el2, col1, col2);
+                    _self._manipulateDOMData(el1, el2, col1, col2);
                     resolve();
                 }
             });
@@ -101,15 +114,16 @@ class Grid {
 
     removeClusters() {
         return new Promise((resolve, reject) => {
+            var _self = this;
+
             if (!this.isfieldDrawn || this.clustersToRemove.length === 0) {
                 resolve();
                 return;
             }
 
-            var _self = this;
             var clustersWithJqueryElements = this.clustersToRemove.map(function (cluster) {
                 return cluster.map(function (tileParameters) {
-                    var tileContainer = findElementContainerInGrid.call(_self, tileParameters.row, tileParameters.column);
+                    var tileContainer = _self._findElementContainerInGrid(tileParameters.row, tileParameters.column);
                     return tileContainer.find('div[class="tile"]');
                 });
             });
@@ -135,10 +149,10 @@ class Grid {
                 return;
             }
 
-            var container = findElementContainerInGrid.call(this, row, col);
+            var container = this._findElementContainerInGrid(row, col);
             container.empty();
 
-            var newElement = createTile.call(this, tile);
+            var newElement = this._createTile(tile);
             newElement.css('display', 'none')
                 .data('type', tile.type);
 
@@ -148,163 +162,158 @@ class Grid {
             })
         })
     }
-}
 
-const toleranceInPx = 3;
-const animationTimeForTileArrangement = 120;
-const animationTimeForTileRemoval = 300;
-const animationTimeForAddingTile = 500;
-
-var startingPosition,
-    startingOffset,
-    differenceX,
-    differenceY,
-    direction;
-
-function onStartOfDraggingTile(event) {
-    startingPosition = {
-        x: event.originalEvent.pageX,
-        y: event.originalEvent.pageY
-    };
-    startingOffset = $(this).offset();
-    differenceX = null;
-    differenceY = null;
-    direction = null;
-}
-
-function onDragOfTile(event) {
-    var position = {
-        x: event.originalEvent.pageX,
-        y: event.originalEvent.pageY
-    };
-
-    var axis = Math.abs(startingPosition.x - position.x) > Math.abs(startingPosition.y - position.y) ? "x" : "y";
-    $(this).draggable('option', 'axis', axis);
-
-    var moved = false;
-    differenceX = startingPosition.x - position.x;
-    differenceY = startingPosition.y - position.y;
-
-    //left
-    if (differenceX >= toleranceInPx) {
-        moved = true;
-        direction = 'left';
-    }
-    //right
-    else if (differenceX <= -toleranceInPx) {
-        moved = true;
-        direction = 'right';
-    }
-    //up
-    else if (differenceY >= toleranceInPx) {
-        moved = true;
-        direction = 'up';
-
-    }
-    //down
-    else if (differenceY <= -toleranceInPx) {
-        moved = true;
-        direction = 'down';
+    _onStartOfDraggingTile(event) {
+        startingPosition = {
+            x: event.originalEvent.pageX,
+            y: event.originalEvent.pageY
+        };
+        startingOffset = $(this).offset();
+        differenceX = null;
+        differenceY = null;
+        direction = null;
     }
 
-    if (moved) {
-        return false;
-    }
-}
+    _onDragOfTile(event) {
+        var position = {
+            x: event.originalEvent.pageX,
+            y: event.originalEvent.pageY
+        };
 
-function onStopOfDraggingTile(classInstance) {
-    var element = $(this);
-    element.offset(startingOffset);
+        var axis = Math.abs(startingPosition.x - position.x) > Math.abs(startingPosition.y - position.y) ? "x" : "y";
+        $(this).draggable('option', 'axis', axis);
 
-    var row2, col2;
-    var row1 = row2 = element.parent().data('row');
-    var col1 = col2 = element.data('col');
+        var moved = false;
+        differenceX = startingPosition.x - position.x;
+        differenceY = startingPosition.y - position.y;
 
-    switch (direction) {
-        case 'left':
-            col2 = col1 - 1;
+        //left
+        if (differenceX >= toleranceInPx) {
+            moved = true;
+            direction = 'left';
+        }
+        //right
+        else if (differenceX <= -toleranceInPx) {
+            moved = true;
+            direction = 'right';
+        }
+        //up
+        else if (differenceY >= toleranceInPx) {
+            moved = true;
+            direction = 'up';
 
-            if (col2 < 0) {
-                return;
-            }
-            break;
-        case 'right':
-            col2 = col1 + 1;
+        }
+        //down
+        else if (differenceY <= -toleranceInPx) {
+            moved = true;
+            direction = 'down';
+        }
 
-            const numberofColumns = classInstance.container.find('div[data-row="' + row1 + '"]').children().length;
-            if (col2 + 1 > numberofColumns) {
-                return;
-            }
-            break;
-        case 'up':
-            row2 = row1 - 1;
-
-            if (row2 < 0) {
-                return;
-            }
-            break;
-        case 'down':
-            row2 = row1 + 1;
-
-            const numberOfRows = classInstance.container.children().length;
-            if (row2 + 1 > numberOfRows) {
-                return;
-            }
-            break;
+        if (moved) {
+            return false;
+        }
     }
 
-    classInstance.swapTiles(row1, col1, row2, col2);
+    _onStopOfDraggingTile(classInstance) {
+        var element = $(this);
+        element.offset(startingOffset);
 
-    startingPosition = null;
-    startingOffset = null;
-}
+        var row2, col2;
+        var row1 = row2 = element.parent().data('row');
+        var col1 = col2 = element.data('col');
 
-function rgb(values) {
-    var joinedValues = values.join(', ');
-    return 'rgb(' + joinedValues + ')';
-}
+        switch (direction) {
+            case 'left':
+                col2 = col1 - 1;
 
-function manipulateDOMData(el1, el2, col1, col2) {
-    el1.attr('data-col', col2 + 't');
-    el1.data('col', col2 + 't');
+                if (col2 < 0) {
+                    return;
+                }
+                break;
+            case 'right':
+                col2 = col1 + 1;
 
-    el2.attr('data-col', col1);
-    el2.data('col', col1);
+                const numberofColumns = classInstance.container.find('div[data-row="' + row1 + '"]').children().length;
+                if (col2 + 1 > numberofColumns) {
+                    return;
+                }
+                break;
+            case 'up':
+                row2 = row1 - 1;
 
-    el1.attr('data-col', col2);
-    el1.data('col', col2);
+                if (row2 < 0) {
+                    return;
+                }
+                break;
+            case 'down':
+                row2 = row1 + 1;
 
-    swapElementsInDOM(el1[0], el2[0]);
-}
+                const numberOfRows = classInstance.container.children().length;
+                if (row2 + 1 > numberOfRows) {
+                    return;
+                }
+                break;
+        }
 
-function swapElementsInDOM(elm1, elm2) {
-    var parent1, next1,
-        parent2, next2;
+        classInstance.swapTiles(row1, col1, row2, col2);
 
-    parent1 = elm1.parentNode;
-    next1 = elm1.nextSibling;
-    parent2 = elm2.parentNode;
-    next2 = elm2.nextSibling;
-
-    parent1.insertBefore(elm2, next1);
-    parent2.insertBefore(elm1, next2);
-}
-
-function findElementContainerInGrid(row, col) {
-    return this.container.find('div[data-row="' + row + '"] div[data-col="' + col + '"]');
-}
-
-function createTile(tileParameters) {
-    var tileDiv = $('<div></div>')
-        .attr('data-type', tileParameters.type)
-        .addClass('tile');
-
-    if (tileParameters.colors) {
-        tileDiv.append($('<div></div>').css('background-color', rgb(tileParameters.colors)));
-    }
-    else if (tileParameters.imageSource) {
-        tileDiv.append($('<img src="' + this.baseTileImagesPath + tileParameters.imageSource + '">'))
+        startingPosition = null;
+        startingOffset = null;
     }
 
-    return tileDiv;
+    _findElementContainerInGrid(row, col) {
+        return this.container.find('div[data-row="' + row + '"] div[data-col="' + col + '"]');
+    }
+
+    _createTile(tileParameters) {
+        var tileDiv = $('<div></div>')
+            .attr('data-type', tileParameters.type)
+            .addClass('tile');
+
+        if (tileParameters.colors) {
+            tileDiv.append($('<div></div>').css('background-color', this._rgb(tileParameters.colors)));
+        }
+        else if (tileParameters.imageSource) {
+            tileDiv.append($('<img src="' + this.baseTileImagesPath + tileParameters.imageSource + '">'))
+        }
+
+        return tileDiv;
+    }
+
+    _manipulateDOMData(el1, el2, col1, col2) {
+        el1.attr('data-col', col2 + 't');
+        el1.data('col', col2 + 't');
+
+        el2.attr('data-col', col1);
+        el2.data('col', col1);
+
+        el1.attr('data-col', col2);
+        el1.data('col', col2);
+
+        this._swapElementsInDOM(el1[0], el2[0]);
+    }
+
+    _swapElementsInDOM(elm1, elm2) {
+        var parent1, next1,
+            parent2, next2;
+
+        parent1 = elm1.parentNode;
+        next1 = elm1.nextSibling;
+        parent2 = elm2.parentNode;
+        next2 = elm2.nextSibling;
+
+        parent1.insertBefore(elm2, next1);
+        parent2.insertBefore(elm1, next2);
+    }
+
+    _rgb(values) {
+        var joinedValues = values.join(', ');
+        return 'rgb(' + joinedValues + ')';
+    }
+
 }
+
+
+
+
+

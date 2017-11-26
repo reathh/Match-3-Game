@@ -75,4 +75,4 @@ var levelWithBarbies = {
 };
 
 var gameEngine = new Engine($("#grid"));
-// gameEngine.createLevel(levelWithTiles);
+gameEngine.createLevel(levelWithTiles);

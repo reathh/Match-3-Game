@@ -1,12 +1,10 @@
 const minimumCombo = 3;
-var _this;
 
 class Engine {
     constructor(gridContainer) {
-        _this = this;
         this.clusters = [];
         this.moves = [];
-        this.grid = new Grid(gridContainer, this.onMouseSwapped);
+        this.grid = new Grid(gridContainer, this, this.onMouseSwapped);
         this.tiles = [];
 
         this.isFieldDrawn = false;
@@ -64,14 +62,14 @@ class Engine {
     }
 
     async onMouseSwapped(row1, col1, row2, col2) {
-        _this._swap(row1, col1, row2, col2);
-        _this._findClusters();
+        this._swap(row1, col1, row2, col2);
+        this._findClusters();
 
-        if (_this.clusters.length === 0) {
-            _this._swap(row1, col1, row2, col2);
-            _this.grid.swapTiles(row1, col1, row2, col2, true);
+        if (this.clusters.length === 0) {
+            this._swap(row1, col1, row2, col2);
+            this.grid.swapTiles(row1, col1, row2, col2, true);
         } else {
-            await _this.findAndResolveClusters();
+            await this.findAndResolveClusters();
         }
     }
 
