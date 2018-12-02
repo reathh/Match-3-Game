@@ -8,7 +8,9 @@ var startingPosition,
     startingOffset,
     differenceX,
     differenceY,
-    direction;
+    direction,
+    selectedTile;
+
 class Grid {
 
     constructor(container, engineInstance, swapTileCallback) {
@@ -44,7 +46,8 @@ class Grid {
                         },
                         stack: 'div',
                         containment: this.container
-                    });
+                    })
+                    .click(this._onClickOfTile);
 
                 tileContainer.append(tileDiv);
                 rowDiv.append(tileContainer);
@@ -162,6 +165,45 @@ class Grid {
             })
         })
     }
+
+    _onClickOfTile() {
+        debugger;
+        var clickedTile = $(this);
+
+        if (!selectedTile) {
+            selectedTile = clickedTile;
+            selectedTile.children().first().addClass('selected')
+        }
+        else {
+            if (clickedTile == selectedTile) {
+                selectedTile = null;
+            }
+            else {
+                var previousTileCoordinates = {
+                    row: selectedTile.parent().data('row'),
+                    col: selectedTile.data('col')
+                };
+                var currentTileCoordinates = {
+                    row: clickedTile.parent().data('row'),
+                    col: clickedTile.data('col')
+                };
+
+                if ((Math.abs(previousTileCoordinates.row - currentTileCoordinates.row) > 1) ||
+                    (Math.abs(previousTileCoordinates.col - currentTileCoordinates.col) > 1)) {
+                    selectedTile = clickedTile;
+                    return;
+                }
+
+                this.swapTiles(previousTileCoordinates.row,
+                    previousTileCoordinates.col,
+                    currentTileCoordinates.row,
+                    currentTileCoordinates.col)
+            }
+        }
+
+    }
+
+
 
     _onStartOfDraggingTile(event) {
         startingPosition = {
@@ -312,8 +354,6 @@ class Grid {
     }
 
 }
-
-
 
 
 
