@@ -167,7 +167,6 @@ class Grid {
     }
 
     _onClickOfTile() {
-        debugger;
         var clickedTile = $(this);
 
         if (!selectedTile) {

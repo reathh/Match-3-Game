@@ -5,6 +5,9 @@
     src: local('Pacifico'), url('http://themes.googleusercontent.com/font?kit=fKnfV28XkldRW297cFLeqfesZW2xOQ-xsNqO47m55DA') format('truetype');
 }
 
+body {
+    text-align: center
+}
 #heading {
     font-family: 'Miroslav', serif
 }

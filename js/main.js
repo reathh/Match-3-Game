@@ -75,8 +75,8 @@ var levelWithBarbies = {
 };
 
 var levelWithMartivi = {
-    columns: 6,
-    rows: 6,
+    columns: 5,
+    rows: 5,
     hardCodedTiles: [
     ],
     tileTypes: [
@@ -96,10 +96,10 @@ var levelWithMartivi = {
             type: "ParkMartivi",
             imageSource: "parkmartivi.jpg"
         },
-        {
-            type: "MoneyMartivi",
-            imageSource: "moneymartivi.jpg"
-        },
+        // {
+        //     type: "MoneyMartivi",
+        //     imageSource: "moneymartivi.jpg"
+        // },
         {
             type: "BedroomMartivi",
             imageSource: "bedroommartivi.jpg"
@@ -135,6 +135,42 @@ var levelWithMartivi = {
         {
             type: "KissingInSpain2Martivi",
             imageSource: "kissinginspain2martivi.jpg"
+        },
+        {
+            type: "SeaMartivi",
+            imageSource: "seamartivi.jpg"
+        },
+        {
+            type: "Beachmartivi2",
+            imageSource: "beachmartivi2.jpg"
+        },
+        {
+            type: "SeasideMartivi",
+            imageSource: "seasidemartivi.jpg"
+        },
+        {
+            type: "Nadejdabeachmartivi",
+            imageSource: "nadejdabeachmartivi.jpg"
+        },
+        {
+            type: "NeofitMartivi",
+            imageSource: "neofitmartivi.jpg"
+        },
+        {
+            type: "Neofit2Martivi",
+            imageSource: "neofit2martivi.jpg"
+        },
+        {
+            type: "TatooMartivi",
+            imageSource: "tatoomartivi.jpg"
+        },
+        {
+            type: "CityMartivi",
+            imageSource: "citymartivi.jpg"
+        },
+        {
+            type: "BmwMartivi",
+            imageSource: "bmwmartivi.jpg"
         }
     ]
 };
