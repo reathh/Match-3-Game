@@ -12,7 +12,6 @@ var startingPosition,
     selectedTile;
 
 class Grid {
-
     constructor(container, engineInstance, swapTileCallback) {
         this.container = container;
         this.engineInstance = engineInstance;
@@ -47,7 +46,7 @@ class Grid {
                         stack: 'div',
                         containment: this.container
                     })
-                    .click(this._onClickOfTile);
+                    .click({classInstance: _self}, this._onClickOfTile);
 
                 tileContainer.append(tileDiv);
                 rowDiv.append(tileContainer);
@@ -166,7 +165,7 @@ class Grid {
         })
     }
 
-    _onClickOfTile() {
+    _onClickOfTile(event) {
         var clickedTile = $(this);
 
         if (!selectedTile) {
@@ -193,7 +192,7 @@ class Grid {
                     return;
                 }
 
-                this.swapTiles(previousTileCoordinates.row,
+                event.data.classInstance.swapTiles(previousTileCoordinates.row,
                     previousTileCoordinates.col,
                     currentTileCoordinates.row,
                     currentTileCoordinates.col)
