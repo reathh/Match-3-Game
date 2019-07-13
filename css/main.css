@@ -5,6 +5,9 @@
     src: local('Pacifico'), url('http://themes.googleusercontent.com/font?kit=fKnfV28XkldRW297cFLeqfesZW2xOQ-xsNqO47m55DA') format('truetype');
 }
 
+#heading {
+    font-family: 'Miroslav', serif
+}
 #grid {
     font-size: 0;
     display: inline-block;
@@ -53,13 +56,13 @@ button {
     -moz-transition: -moz-box-shadow .1s ease-in-out;
     -o-transition: -o-box-shadow .1s ease-in-out;
     transition: box-shadow .1s ease-in-out;
-    font-size: 50px;
+    font-size: 25px;
     color: #fff;
 }
 
 #barbiebutton span {
     display: inline-block;
-    padding: 20px 30px;
+    padding: 15px 20px;
     background-color: #ec528d;
     background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(hsla(338, 90%, 80%, .8)), to(hsla(338, 90%, 70%, .2)));
     background-image: -webkit-linear-gradient(hsla(338, 90%, 80%, .8), hsla(338, 90%, 70%, .2));

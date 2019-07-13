@@ -74,5 +74,70 @@ var levelWithBarbies = {
     ]
 };
 
+var levelWithMartivi = {
+    columns: 6,
+    rows: 6,
+    hardCodedTiles: [
+    ],
+    tileTypes: [
+        {
+            type: "BeachMartivi",
+            imageSource: "beachmartivi.jpg"
+        },
+        {
+            type: "SpainMartivi",
+            imageSource: "spainmartivi.jpg"
+        },
+        {
+            type: 'ClassroomMartivi',
+            imageSource: "classroommartivi.jpg"
+        },
+        {
+            type: "ParkMartivi",
+            imageSource: "parkmartivi.jpg"
+        },
+        {
+            type: "MoneyMartivi",
+            imageSource: "moneymartivi.jpg"
+        },
+        {
+            type: "BedroomMartivi",
+            imageSource: "bedroommartivi.jpg"
+        },
+        {
+            type: "PromMartivi",
+            imageSource: "prommartivi.jpg"
+        },
+        {
+            type: "SchoolMartivi",
+            imageSource: "schoolmartivi.jpg"
+        },
+        {
+            type: "AtvMartivi",
+            imageSource: "atvmartivi.jpg"
+        },
+        {
+            type: "SofiaMartivi",
+            imageSource: "sofiamartivi.jpg"
+        },
+        {
+            type: "BirthdayMartivi",
+            imageSource: "birthdaymartivi.jpg"
+        },
+        {
+            type: "LickingMartivi",
+            imageSource: "lickingmartivi.jpg"
+        },
+        {
+            type: "KissingInSpainMartivi",
+            imageSource: "kissinginspainmartivi.jpg"
+        },
+        {
+            type: "KissingInSpain2Martivi",
+            imageSource: "kissinginspain2martivi.jpg"
+        }
+    ]
+};
+
 var gameEngine = new Engine($("#grid"));
-gameEngine.createLevel(levelWithTiles);
+gameEngine.createLevel(levelWithMartivi);
