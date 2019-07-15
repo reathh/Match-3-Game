@@ -9,7 +9,7 @@ body {
     text-align: center
 }
 #heading {
-    font-family: 'Miroslav', serif
+    font-family: "Courier New", "Comic Sans MS", serif
 }
 #grid {
     font-size: 0;
@@ -38,7 +38,7 @@ body {
     border: 1px solid black;
 }
 
-.tile > *.selected {
+.selected {
     border: 2px solid orange;
 }
 
@@ -103,3 +103,4 @@ button {
     -o-transform: translate(0, 4px);
     transform: translate(0, 4px);
 }
+

@@ -126,7 +126,7 @@ class Grid {
             var clustersWithJqueryElements = this.clustersToRemove.map(function (cluster) {
                 return cluster.map(function (tileParameters) {
                     var tileContainer = _self._findElementContainerInGrid(tileParameters.row, tileParameters.column);
-                    return tileContainer.find('div[class="tile"]');
+                    return tileContainer.find('.tile');
                 });
             });
 
@@ -174,6 +174,7 @@ class Grid {
         }
         else {
             if (clickedTile == selectedTile) {
+                selectedTile.children().first().removeClass('selected')
                 selectedTile = null;
             }
             else {
@@ -188,7 +189,9 @@ class Grid {
 
                 if ((Math.abs(previousTileCoordinates.row - currentTileCoordinates.row) > 1) ||
                     (Math.abs(previousTileCoordinates.col - currentTileCoordinates.col) > 1)) {
+                    selectedTile.children().first().removeClass('selected')
                     selectedTile = clickedTile;
+                    selectedTile.children().first().addClass('selected')
                     return;
                 }
 
@@ -196,6 +199,9 @@ class Grid {
                     previousTileCoordinates.col,
                     currentTileCoordinates.row,
                     currentTileCoordinates.col)
+
+                selectedTile.children().first().removeClass('selected')
+                selectedTile = null
             }
         }
 

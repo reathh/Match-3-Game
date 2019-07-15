@@ -171,6 +171,70 @@ var levelWithMartivi = {
         {
             type: "BmwMartivi",
             imageSource: "bmwmartivi.jpg"
+        },
+        {
+            type: "School2Martivi",
+            imageSource: "school2martivi.jpg"
+        },
+        {
+            type: "ZalojnaMartivi",
+            imageSource: "zalojnamartivi.jpg"
+        },
+        {
+            type: "Prom2Martivi",
+            imageSource: "prom2martivi.jpg"
+        },
+        {
+            type: "AirplaneMartivi",
+            imageSource: "airplanemartivi.jpg"
+        },
+        {
+            type: "Airplane2Martivi",
+            imageSource: "airplane2martivi.jpg"
+        },
+        {
+            type: "Spain2Martivi",
+            imageSource: "spain2martivi.jpg"
+        },
+        {
+            type: "MiddleSpainMartivi",
+            imageSource: "midddlespainmartivi.jpg"
+        },
+        {
+            type: "Spain3Martivi",
+            imageSource: "spain3martivi.jpg"
+        },
+        {
+            type: "Spain4Martivi",
+            imageSource: "spain4martivi.jpg"
+        },
+        {
+            type: "HoldingSpainMartivi",
+            imageSource: "holdingspainmartivi.jpg"
+        },
+        {
+            type: "PlaneMartivi",
+            imageSource: "planemartivi.jpg"
+        },
+        {
+            type: "HouseSpainMartivi",
+            imageSource: "housespainmartivi.jpg"
+        },
+        {
+            type: "BsMartivi",
+            imageSource: "bsmartivi.jpg"
+        },
+        {
+            type: "NadejdaBeach2Martivi",
+            imageSource: "nadejdabeach2martivi.jpg"
+        },
+        {
+            type: "MercariMartivi",
+            imageSource: "mercarimartivi.jpg"
+        },
+        {
+            type: "BdayMartivi",
+            imageSource: "bdaymartivi.jpg"
         }
     ]
 };
